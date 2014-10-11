@@ -82,8 +82,8 @@ def run():
     message = json.loads(sns['Message'])
     instance_id = str(message['EC2InstanceId'])
 
-    if 'launch' in sns['Subject']:
-        vm_ = __opts__.get('ec2.autoscale', {})
+    if 'launch' in sns['Subject'].lower():
+        vm_ = __opts__.get(tag.split('/')[-2], {})
         vm_['reactor'] = True
         vm_['instances'] = instance_id
         vm_['instance_id'] = instance_id
@@ -97,7 +97,7 @@ def run():
                 'runner.cloud.create': vm_list
             }
         }
-    elif 'termination' in sns['Subject']:
+    elif 'termination' in sns['Subject'].lower():
         ret = {
             'ec2_autoscale_termination': {
                 'wheel.key.delete': [

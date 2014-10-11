@@ -39,7 +39,7 @@ The configuration for Salt API is stored in the master configuration file:
           - .*
           - '@runner'
           - '@wheel'
-    
+
     rest_cherrypy:
       port: 8080
       host: 0.0.0.0
@@ -52,8 +52,12 @@ system to pick up:
 .. code-block:: yaml
 
     reactor:
-      - 'salt/netapi/hook/ec2/autoscale':
+      - 'salt/netapi/hook/autoscale/<profile-name>/<action>':
         - '/srv/reactor/ec2-autoscale.sls'
+
+The reactor will use the <profile-name> to determine which profile to use
+when bootstrapping the new instance. Action refers to the type of action that
+is occurring (e.g. up or down).
 
 This reactor will examine the web hook received from EC2 and check its
 authenticity. If issues are encountered, such as an invalid signature, or the
@@ -80,7 +84,7 @@ also be set here.
 
 .. code-block:: yaml
 
-    ec2.autoscale:
+    <profile-name>:
       provider: my-ec2-config
       ssh_username: ec2-user
 
@@ -216,4 +220,3 @@ therefore be identified to the master by their ``instance-id``. In the event
 that more detailed identifying information needs to be available, the instances
 should be configured to include EC2 tags, which can later be read and displayed
 to the user via Salt Cloud.
-
